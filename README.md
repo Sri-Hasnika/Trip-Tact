@@ -72,7 +72,7 @@ trip-tact/
 - **Voice Assistant Integration** – AI-powered voice commands for hands-free itinerary management
 
 ## 📧 Contact
-For inquiries, reach out at [your-srihasnika@gmail.com](mailto:srihasnika@gmail.com) or visit our [GitHub Repository](https://github.com/Sri-Hasnika/trip-tact).
+For inquiries, reach out at [srihasnika@gmail.com](mailto:srihasnika@gmail.com) or visit our [GitHub Repository](https://github.com/Sri-Hasnika/trip-tact).
 
 ---
 💡 *Plan Smarter, Travel Better with AI-Powered Trip Tact!* ✈️🗺️
