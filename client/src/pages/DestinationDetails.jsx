@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -89,7 +87,7 @@ const DestinationDetails = () => {
       openingHours: 'Varies by site (usually 9:00 AM - 5:00 PM)',
       entryFee: 10,
       contactInfo: 'visit@kyoto.jp',
-      notes: 'Don’t miss the Arashiyama Bamboo Grove and Fushimi Inari Shrine.',
+      notes: 'Do Not miss the Arashiyama Bamboo Grove and Fushimi Inari Shrine.',
     },
     {
       id: 9,
@@ -111,7 +109,7 @@ const DestinationDetails = () => {
       openingHours: 'Varies by attraction',
       entryFee: null,
       contactInfo: 'contact@tourismthailand.org',
-      notes: 'Don’t miss the floating markets and street food.',
+      notes: 'Do not miss the floating markets and street food.',
     },
     {
       id: 11,
@@ -166,11 +164,10 @@ const DestinationDetails = () => {
       openingHours: 'Varies by shopping area',
       entryFee: null,
       contactInfo: 'info@visitmilan.com',
-      notes: 'Don’t miss the Galleria Vittorio Emanuele II and Duomo di Milano.',
+      notes: 'Do not miss the Galleria Vittorio Emanuele II and Duomo di Milano.',
     },
   ];
   
-
   const fetchDestinationDetails = async () => {
     try {
       setLoading(true);
@@ -191,16 +188,61 @@ const DestinationDetails = () => {
     fetchDestinationDetails();
   }, [id]);
 
+  // Format category name for display
+  const formatCategory = (category) => {
+    return category.split('-').map(word => 
+      word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' & ');
+  };
+
   if (loading) {
-    return <div className="text-center">Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-50 to-blue-50">
+        <div className="text-center p-8">
+          <div className="inline-block w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-indigo-600 font-medium">Loading destination details...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="text-center text-red-500">{error}</div>;
+    return (
+<div className="min-h-screen pt-20 flex items-center justify-center bg-gradient-to-r from-red-50 to-pink-50 p-4">
+        <div className="bg-white pt-20 p-8 rounded-xl shadow-lg max-w-md w-full text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+            <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">Error</h3>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button 
+            onClick={() => navigate('/destinations')}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Go Back to Destinations
+          </button>
+        </div>
+      </div>
+    );
   }
 
   if (!destination) {
-    return <div className="text-center">Destination not found</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-50 to-blue-50 p-4">
+        <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center">
+          <h3 className="text-xl font-bold text-gray-800 mb-4">Destination not found</h3>
+          <p className="text-gray-600 mb-6">We couldn't find the destination you're looking for.</p>
+          <button 
+            onClick={() => navigate('/destinations')}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Explore Other Destinations
+          </button>
+        </div>
+      </div>
+    );
   }
 
   const {
@@ -214,32 +256,121 @@ const DestinationDetails = () => {
     notes,
   } = destination;
 
+  // Category badges color mapping
+  const getCategoryColor = (cat) => {
+    const categoryColors = {
+      'nature-and-wildlife': 'bg-green-100 text-green-800',
+      'beaches-and-islands': 'bg-blue-100 text-blue-800',
+      'cultural-and-historical-sites': 'bg-amber-100 text-amber-800',
+      'family-and-romantic-getaways': 'bg-pink-100 text-pink-800',
+      'adventure-and-nightlife': 'bg-violet-100 text-violet-800',
+      'luxury-and-wellness': 'bg-purple-100 text-purple-800',
+      'budget-and-shopping-destinations': 'bg-teal-100 text-teal-800',
+    };
+    return categoryColors[cat] || 'bg-gray-100 text-gray-800';
+  };
+
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <button
-        onClick={() => navigate('/destinations')}
-        className="mb-6 text-blue-500 underline"
-      >
-        Back to Explore Destinations
-      </button>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div>
-          <img
-            src={imageUrl}
-            alt={name}
-            className="w-full h-64 object-cover rounded-lg shadow-md"
-          />
+    <div className="min-h-screen bg-gradient-to-r from-indigo-50 to-blue-50 py-12 px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center mb-6">
+          <button
+            onClick={() => navigate('/destinations')}
+            className="flex items-center text-indigo-600 hover:text-indigo-800 font-medium transition-colors"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Back to Explore Destinations
+          </button>
         </div>
-        <div>
-          <h1 className="text-3xl font-extrabold text-blue-600 mb-4">{name}</h1>
-          <p className="text-lg text-gray-600 mb-4">{description}</p>
-          <h3 className="text-xl font-semibold text-blue-500">Category: {category}</h3>
-          <h4 className="text-lg font-medium mt-4">Opening Hours: {openingHours || 'N/A'}</h4>
-          <h4 className="text-lg font-medium mt-2">Entry Fee: {entryFee ? `$${entryFee}` : 'Free'}</h4>
-          <h4 className="text-lg font-medium mt-2">Contact Info: {contactInfo || 'N/A'}</h4>
-          <div className="mt-4">
-            <h4 className="font-semibold text-lg">Notes:</h4>
-            <p>{notes || 'No additional notes available.'}</p>
+        
+        <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          {/* Hero image section */}
+          <div className="relative h-80 sm:h-96 w-full">
+            <img
+              src={imageUrl}
+              alt={name}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-6">
+              <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-3 ${getCategoryColor(category)}`}>
+                {formatCategory(category)}
+              </span>
+              <h1 className="text-3xl sm:text-4xl font-bold text-white mb-2">{name}</h1>
+            </div>
+          </div>
+          
+          {/* Content section */}
+          <div className="p-6 sm:p-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Main description */}
+              <div className="lg:col-span-2">
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">About this destination</h2>
+                <p className="text-gray-600 mb-6 leading-relaxed">{description}</p>
+                
+                <div className="mb-6">
+                  <h3 className="font-semibold text-gray-800 mb-3">Travel Notes</h3>
+                  <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                    <p className="text-gray-700">{notes || 'No additional notes available.'}</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Details sidebar */}
+              <div className="lg:col-span-1">
+                <div className="bg-gray-50 rounded-xl p-6">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Destination Details</h3>
+                  
+                  <div className="space-y-4">
+                    <div className="flex items-start">
+                      <div className="mt-1 mr-3 flex-shrink-0">
+                        <svg className="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-500">Opening Hours</h4>
+                        <p className="text-gray-800">{openingHours || 'Not specified'}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="mt-1 mr-3 flex-shrink-0">
+                        <svg className="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-500">Entry Fee</h4>
+                        <p className="text-gray-800">{entryFee ? `$${entryFee}` : 'Free'}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start">
+                      <div className="mt-1 mr-3 flex-shrink-0">
+                        <svg className="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                      </div>
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-500">Contact</h4>
+                        <p className="text-gray-800">{contactInfo || 'Not available'}</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 pt-6 border-t border-gray-200">
+                    <button className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                      </svg>
+                      Add to My Trip
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

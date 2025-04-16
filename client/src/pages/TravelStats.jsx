@@ -84,6 +84,7 @@ const StatCard = ({ label, value, icon }) => {
 const styles = {
   container: {
     padding: "30px",
+     paddingTop: "140px",
     maxWidth: "800px",
     margin: "auto",
     fontFamily: "'Arial', sans-serif",
